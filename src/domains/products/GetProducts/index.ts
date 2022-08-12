@@ -19,7 +19,7 @@ export const getProductsSchema = yup.object({
           'emptyOrMatchesRegex',
           'Categories must be an empty string or must match "(category_slug1,category_slug2,...)"',
           (str) => {
-            return /^(?:[A-Za-z]+,?)+$/.test(str) || str === '';
+            return /^(?:[A-Za-z-]+,?)*$/.test(str) || str === '';
           }
         )
         .label('Categories'),
