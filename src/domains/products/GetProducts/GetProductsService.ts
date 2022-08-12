@@ -23,20 +23,17 @@ export default class GetProductsService extends BaseService<
     );
     const [sizes, sizesValues] = this.query(data, 'sizes', 'name');
 
-    const queriesWhere = [];
+    const queries = [];
     let queriesValues = {};
     if (categories) {
-      queriesWhere.push(categories);
+      queries.push(categories);
       queriesValues = { ...queriesValues, ...categoriesValues };
     }
     if (sizes) {
-      queriesWhere.push(sizes);
+      queries.push(sizes);
       queriesValues = { ...queriesValues, ...sizesValues };
     }
-    const where =
-      queriesWhere.length > 0 ? queriesWhere.join(' OR ') : undefined;
-
-    const order = PaginationHelper.getOrder(data.orderBy, 'products');
+    const queriesWhere = queries.length > 0 ? queries.join(' AND ') : '1=1';
 
     let search: string[];
     if (data.search) {
@@ -44,21 +41,21 @@ export default class GetProductsService extends BaseService<
       search = searchArr.map((word) => `%${word}%`);
     }
 
+    const searchWhere = data.search
+      ? `(products.name ILIKE ANY(:search) OR products.description ILIKE ANY(:search) OR photos.description ILIKE ANY(:search) OR (sale.campaing ILIKE ANY(:search) AND sale.start_date <= NOW() AND sale.end_date >= NOW()) OR categories.name ILIKE ANY(:search) OR sizes.name ILIKE ANY(:search))`
+      : '1=1';
+
+    const finalStr = `${searchWhere} AND ${queriesWhere}`;
+
+    const order = PaginationHelper.getOrder(data.orderBy, 'products');
+
     const products = await this.repository.product
       .createQueryBuilder('products')
       .leftJoinAndSelect('products.categories', 'categories')
       .leftJoinAndSelect('products.sizes', 'sizes')
       .leftJoinAndSelect('products.sale', 'sale')
       .leftJoinAndSelect('products.photos', 'photos')
-      .where(
-        data.search
-          ? `products.name ILIKE ANY(:search) OR products.description ILIKE ANY(:search) OR photos.description ILIKE ANY(:search) OR (sale.campaing ILIKE ANY(:search) AND sale.start_date <= NOW() AND sale.end_date >= NOW()) OR categories.name ILIKE ANY(:search) OR sizes.name ILIKE ANY(:search)`
-          : '1=1',
-        { search }
-      )
-      .andWhere(where && !data.search ? where : '1=1', queriesValues)
-      .orWhere(where && data.search ? where : '1=0', queriesValues)
-
+      .where(finalStr, { ...queriesValues, search })
       .skip(data.limit * (data.page - 1))
       .take(data.limit)
       .orderBy(order)
@@ -70,14 +67,7 @@ export default class GetProductsService extends BaseService<
       .leftJoinAndSelect('products.sizes', 'sizes')
       .leftJoinAndSelect('products.sale', 'sale')
       .leftJoinAndSelect('products.photos', 'photos')
-      .where(
-        data.search
-          ? `products.name ILIKE ANY(:search) OR products.description ILIKE ANY(:search) OR photos.description ILIKE ANY(:search) OR (sale.campaing ILIKE ANY(:search) AND sale.start_date <= NOW() AND sale.end_date >= NOW()) OR categories.name ILIKE ANY(:search) OR sizes.name ILIKE ANY(:search)`
-          : '1=1',
-        { search }
-      )
-      .andWhere(where && !data.search ? where : '1=1', queriesValues)
-      .orWhere(where && data.search ? where : '1=0', queriesValues)
+      .where(finalStr, { ...queriesValues, search })
       .orderBy(order)
       .getCount();
 
