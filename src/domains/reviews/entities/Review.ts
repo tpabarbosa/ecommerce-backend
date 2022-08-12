@@ -60,7 +60,11 @@ class Review {
   toViewProduct() {
     return {
       id: this.id,
-      user: { firstname: this.user?.firstname, lastname: this.user?.lastname },
+      user: {
+        id: this.user?.id,
+        firstname: this.user?.firstname,
+        lastname: this.user?.lastname,
+      },
       product: this.product?.toView(),
       title: this.title,
       content: this.content,

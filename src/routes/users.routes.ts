@@ -27,6 +27,10 @@ import GetUserReviews, {
   getUserReviewsSchema,
 } from '../domains/reviews/GetUserReviews';
 
+import GetUserReview, {
+  getUserReviewSchema,
+} from '../domains/reviews/GetUserReview';
+
 import CreateReview, {
   createReviewSchema,
 } from '../domains/reviews/CreateReview';
@@ -39,7 +43,7 @@ usersRouter.post('/', validateSchema(createUserSchema), CreateUser);
 
 usersRouter.use(authenticate);
 
-// usersRouter.get('/', authorize([UserRole.USER]), GetUsers);
+// usersRouter.get('/', authorize([UserRole.ADMIN]), GetUsers);
 
 usersRouter.get(
   '/:user_id',
@@ -53,6 +57,13 @@ usersRouter.get(
   authorize([UserRole.ADMIN, UserRole.USER]),
   validateSchema(getUserReviewsSchema),
   GetUserReviews
+);
+
+usersRouter.get(
+  '/:user_id/reviews/:product_id',
+  authorize([UserRole.ADMIN, UserRole.USER]),
+  validateSchema(getUserReviewSchema),
+  GetUserReview
 );
 
 usersRouter.post(
