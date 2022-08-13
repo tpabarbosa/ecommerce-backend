@@ -99,7 +99,7 @@ class Product {
       name: this.name,
       slug: this.slug,
       price: parseFloat(this.price as any),
-      photos: this.photos?.map((photo) => photo.toView()),
+      photos: this.photos?.map((photo) => photo.toViewDetails()),
       sale: this.sale?.toView(),
       sizes: this.sizes?.map((size) => size.toView()),
     };
