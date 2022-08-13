@@ -9,28 +9,30 @@ const PORT = config.port as number;
 const HOST = config.host;
 
 class Server {
+  public app: any;
+
   public init() {
-    const app = express();
+    this.app = express();
 
-    app.use(express.json());
-    app.use(express.urlencoded({ extended: true }));
-    app.use(cors());
+    this.app.use(express.json());
+    this.app.use(express.urlencoded({ extended: true }));
+    this.app.use(cors());
 
-    app.get('/', (request, response) => {
+    this.app.get('/', (request, response) => {
       return response.json({
         message: `Server is running at ${HOST}:${PORT}!`,
       });
     });
 
-    app.use('/api', routes);
+    this.app.use('/api', routes);
 
-    app.all('/*', (request, response, next: NextFunction) => {
+    this.app.all('/*', (request, response, next: NextFunction) => {
       return next(new NotFoundError('Resource not found'));
     });
 
-    app.use(errorHandler);
+    this.app.use(errorHandler);
 
-    app.listen(PORT, () => {
+    this.app.listen(PORT, () => {
       // eslint-disable-next-line no-console
       console.log(`Back-end started in ${HOST}:${PORT}!`);
     });
