@@ -82,7 +82,7 @@ usersRouter.get(
 
 usersRouter.post(
   '/:user_id/cart',
-  authorize([UserRole.ADMIN, UserRole.USER]),
+  authorize(UserRole.USER),
   validateSchema(addCartItemSchema),
   AddCartItem
 );
