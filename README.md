@@ -15,6 +15,9 @@ For user authentication and authorization it makes use of **JWT Token** with **B
 > 👉 https://tpabarbosa-ecommerce-backend.herokuapp.com/api/v1/products
 > .
 
+![create user controller](/docs/CreateUserController.png?raw=true)
+![user routes](/docs/userRoutes.png?raw=true)
+
 ## Endpoints 📌
 
 #### **API**
