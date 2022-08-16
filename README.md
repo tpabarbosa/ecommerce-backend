@@ -73,9 +73,9 @@ All routes must be prefixed with /api/v1
 
 All routes must be prefixed with /api/v1
 
-- POST /login
+- POST /auth/login
   - PUBLIC - check user credentials and provide an access jwt token
-- POST /verify-token/:token
+- GET /auth/verify-token/:token
   - PUBLIC - check if a jwt token is valid
 
 #### **PRODUCTS**
