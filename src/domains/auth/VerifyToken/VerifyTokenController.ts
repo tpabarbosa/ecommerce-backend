@@ -7,6 +7,7 @@ import BaseController from '../../../baseClasses/BaseController';
 import { HttpSuccessResponse } from '../../../baseClasses/HttpResponse';
 import { VerifyTokenDTO } from '.';
 import User from '../../users/entities/User';
+import InvalidUserError from '../errors/InvalidUserError';
 
 export default class VerifyTokenController extends BaseController<
   [User],
@@ -28,6 +29,10 @@ export default class VerifyTokenController extends BaseController<
       id: isValid.sub,
     };
     const user = (await this.service.verifyToken.execute(data)) as User;
+
+    if (!user) {
+      throw new InvalidUserError();
+    }
 
     return new HttpSuccessResponse(StatusCode.OK, {
       message: 'This token is valid',
