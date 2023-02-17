@@ -21,3 +21,4 @@ function bootstrap() {
 
 bootstrap();
 // export default app;
+module.exports = bootstrap;
