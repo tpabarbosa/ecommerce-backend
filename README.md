@@ -10,9 +10,9 @@ For user authentication and authorization it makes use of **JWT Token** with **B
 >
 > **Test it:**
 >
-> 👉 https://tpabarbosa-ecommerce-backend.herokuapp.com/
+> 👉 https://ecommerce-backend-delta.vercel.app/
 >
-> 👉 https://tpabarbosa-ecommerce-backend.herokuapp.com/api/v1/products
+> 👉 https://ecommerce-backend-delta.vercel.app/api/v1/products
 > .
 
 ![create user controller](/docs/CreateUserController.png?raw=true)
