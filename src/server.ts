@@ -18,13 +18,13 @@ class Server {
     this.app.use(express.urlencoded({ extended: true }));
     this.app.use(cors());
 
+    this.app.use('/api', routes);
+
     this.app.get('/', (request, response) => {
       return response.json({
         message: `Server is running at ${HOST}:${PORT}!`,
       });
     });
-
-    this.app.use('/api', routes);
 
     this.app.all('/*', (request, response, next: NextFunction) => {
       return next(new NotFoundError('Resource not found'));
